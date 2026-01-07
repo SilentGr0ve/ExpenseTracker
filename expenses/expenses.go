@@ -36,7 +36,7 @@ func NewExpense(description string, amount float64) (*Expense, error) {
 }
 
 func (el ExpenseList) ShowList() error {
-	fmt.Println("Expenses:")
+	fmt.Println("Current expenses:")
 	if len(el) == 0 {
 		return errors.New("no expenses found")
 	}
@@ -61,7 +61,6 @@ func (el *ExpenseList) AddExpense(description string, amount float64) error {
 }
 
 func (el *ExpenseList) RemoveExpense() error {
-	fmt.Println("Current Expenses:")
 	err := el.ShowList()
 	if err != nil {
 		return err
@@ -79,16 +78,31 @@ func (el *ExpenseList) RemoveExpense() error {
 	return nil
 }
 
-//func (el *ExpenseList) UpdateExpense() error {
-//	fmt.Println("Current Expenses:")
-//	err := el.ShowList()
-//	if err != nil {
-//		return err
-//	}
-//	fmt.Printf("\nEnter number of expense to update: ")
-//	var count int
-//	_, _ = fmt.Scanf("%d", &count)
-//	if count == 0 || count > len(*el) {
-//		return errors.New("number of expenses are out of range")
-//	}
-//}
+func (el *ExpenseList) UpdateExpense() error {
+	err := el.ShowList()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("\nEnter number of expense to update: ")
+	var count int
+	_, _ = fmt.Scanf("%d", &count)
+	if count == 0 || count > len(*el) {
+		return errors.New("number of expenses are out of range")
+	}
+
+	fmt.Printf("What exactly do you want to update?\n\t1. Description\n\t2. Amount\n\t3. Both of them\n")
+	return nil
+	// Не закончено
+}
+
+func (el *ExpenseList) Summary() (float64, error) {
+	if len(*el) == 0 {
+		return 0.0, errors.New("no expenses found")
+	}
+	sum := 0.0
+	for _, expense := range *el {
+		sum += expense.Amount
+	}
+	return sum, nil
+}
