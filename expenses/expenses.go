@@ -3,6 +3,9 @@ package expenses
 import (
 	"errors"
 	"fmt"
+	"os"
+	"slices"
+	"text/tabwriter"
 	"time"
 )
 
@@ -32,15 +35,19 @@ func NewExpense(description string, amount float64) (*Expense, error) {
 	}, nil
 }
 
-func (el ExpenseList) ShowList() {
+func (el ExpenseList) ShowList() error {
 	fmt.Println("Expenses:")
 	if len(el) == 0 {
-		fmt.Println("No expenses found...")
-		return
+		return errors.New("no expenses found")
 	}
-	for _, expense := range el {
-		fmt.Printf("\t%s\t%.2f\t%v\n", expense.Description, expense.Amount, expense.Date.Format(time.RFC822Z))
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	for i, e := range el {
+		fmt.Fprintf(w, "%d.\t%s\t%.2f\t%s\t\n",
+			i+1, e.Description, e.Amount, e.Date.Format(time.RFC822Z),
+		)
 	}
+	w.Flush()
+	return nil
 }
 
 func (el *ExpenseList) AddExpense(description string, amount float64) error {
@@ -52,3 +59,36 @@ func (el *ExpenseList) AddExpense(description string, amount float64) error {
 	fmt.Printf("Expense added: %s - %.2f\n", expense.Description, expense.Amount)
 	return nil
 }
+
+func (el *ExpenseList) RemoveExpense() error {
+	fmt.Println("Current Expenses:")
+	err := el.ShowList()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("\nEnter number of expense to remove: ")
+	var count int
+	_, _ = fmt.Scanf("%d", &count)
+	if count == 0 || count > len(*el) {
+		return errors.New("number of expenses are out of range")
+	}
+
+	fmt.Printf("\nExpense №%d removed\n", count)
+	*el = slices.Delete(*el, count-1, (count-1)+1)
+	return nil
+}
+
+//func (el *ExpenseList) UpdateExpense() error {
+//	fmt.Println("Current Expenses:")
+//	err := el.ShowList()
+//	if err != nil {
+//		return err
+//	}
+//	fmt.Printf("\nEnter number of expense to update: ")
+//	var count int
+//	_, _ = fmt.Scanf("%d", &count)
+//	if count == 0 || count > len(*el) {
+//		return errors.New("number of expenses are out of range")
+//	}
+//}
