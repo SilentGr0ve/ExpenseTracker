@@ -23,10 +23,10 @@ func NewExpenseList() ExpenseList {
 
 func NewExpense(description string, amount float64) (*Expense, error) {
 	if description == "" {
-		return nil, errors.New("description cannot be empty")
+		return nil, emptyDescriptionError
 	}
 	if amount <= 0 {
-		return nil, errors.New("amount must be greater than zero")
+		return nil, emptyAmountError
 	}
 	return &Expense{
 		Description: description,
@@ -38,7 +38,7 @@ func NewExpense(description string, amount float64) (*Expense, error) {
 func (el ExpenseList) ShowList() error {
 	fmt.Println("Current expenses:")
 	if len(el) == 0 {
-		return errors.New("no expenses found")
+		return emptyExpenseListError
 	}
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
 	for i, e := range el {
@@ -70,7 +70,7 @@ func (el *ExpenseList) RemoveExpense() error {
 	var count int
 	_, _ = fmt.Scanf("%d", &count)
 	if count == 0 || count > len(*el) {
-		return errors.New("number of expenses are out of range")
+		return listOutOfRangeError
 	}
 
 	fmt.Printf("\nExpense №%d removed\n", count)
@@ -78,7 +78,7 @@ func (el *ExpenseList) RemoveExpense() error {
 	return nil
 }
 
-func (el *ExpenseList) UpdateExpense() error {
+func (el *ExpenseList) Update() error {
 	err := el.ShowList()
 	if err != nil {
 		return err
@@ -88,17 +88,64 @@ func (el *ExpenseList) UpdateExpense() error {
 	var count int
 	_, _ = fmt.Scanf("%d", &count)
 	if count == 0 || count > len(*el) {
-		return errors.New("number of expenses are out of range")
+		return listOutOfRangeError
 	}
 
-	fmt.Printf("What exactly do you want to update?\n\t1. Description\n\t2. Amount\n\t3. Both of them\n")
+	fmt.Printf("What exactly do you want to update?\n\t1. Description\n\t2. Amount\n")
+	var choice int
+	_, _ = fmt.Scanf("%d", &choice)
+	switch choice {
+	case 1:
+		fmt.Printf("\nEnter the new description of the expense: ")
+		var description string
+		_, _ = fmt.Scanf("%s", &description)
+		err := el.UpdateDescription(count, description)
+		if err != nil {
+			return err
+		}
+
+	case 2:
+		fmt.Printf("\nEnter the new amount of the expense: ")
+		var amount float64
+		_, _ = fmt.Scanf("%f", &amount)
+		err := el.UpdateAmount(count, amount)
+		if err != nil {
+			return err
+		}
+
+	default:
+		return defaultError
+	}
 	return nil
-	// Не закончено
+}
+
+func (el *ExpenseList) UpdateDescription(index int, description string) error {
+	if description == "" {
+		return errors.New("description cannot be empty")
+	}
+	if index <= 0 || index > len(*el) {
+		return indexOutOfRangeError
+	}
+	(*el)[index].Description = description
+	fmt.Printf("Description updated: %s\n", (*el)[index].Description)
+	return nil
+}
+
+func (el *ExpenseList) UpdateAmount(index int, amount float64) error {
+	if amount <= 0 {
+		return greaterThanZeroError
+	}
+	if index <= 0 || index > len(*el) {
+		return indexOutOfRangeError
+	}
+	(*el)[index].Amount = amount
+	fmt.Printf("Amount updated: %.2f\n", (*el)[index].Amount)
+	return nil
 }
 
 func (el *ExpenseList) Summary() (float64, error) {
 	if len(*el) == 0 {
-		return 0.0, errors.New("no expenses found")
+		return 0.0, emptyExpenseListError
 	}
 	sum := 0.0
 	for _, expense := range *el {
