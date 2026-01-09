@@ -4,8 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"slices"
 	"text/tabwriter"
+
+	"slices"
 	"time"
 )
 
@@ -34,6 +35,14 @@ func NewExpense(description string, amount float64) (*Expense, error) {
 		Date:        time.Now(),
 	}, nil
 }
+
+//func (el *ExpenseList) List() (ExpenseList, error) {
+//	fmt.Println("Current expenses:")
+//	if len(*el) == 0 {
+//		return ExpenseList{}, emptyExpenseListError
+//	}
+//	return *el, nil
+//}
 
 func (el ExpenseList) ShowList() error {
 	fmt.Println("Current expenses:")
@@ -76,7 +85,7 @@ func (el *ExpenseList) RemoveExpense() error {
 		return listOutOfRangeError
 	}
 
-	fmt.Printf("\nExpense №%d removed\n", count)
+	fmt.Printf("\nExpense в„–%d removed\n", count)
 	*el = slices.Delete(*el, count-1, (count-1)+1)
 	return nil
 }
