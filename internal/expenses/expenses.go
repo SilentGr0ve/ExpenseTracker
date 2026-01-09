@@ -68,7 +68,10 @@ func (el *ExpenseList) RemoveExpense() error {
 
 	fmt.Printf("\nEnter number of expense to remove: ")
 	var count int
-	_, _ = fmt.Scanf("%d", &count)
+	_, err = fmt.Scanf("%d", &count)
+	if err != nil {
+		return NaNError
+	}
 	if count == 0 || count > len(*el) {
 		return listOutOfRangeError
 	}
@@ -86,14 +89,20 @@ func (el *ExpenseList) Update() error {
 
 	fmt.Printf("\nEnter number of expense to update: ")
 	var count int
-	_, _ = fmt.Scanf("%d", &count)
+	_, err = fmt.Scanf("%d", &count)
+	if err != nil {
+		return NaNError
+	}
 	if count == 0 || count > len(*el) {
 		return listOutOfRangeError
 	}
 
 	fmt.Printf("What exactly do you want to update?\n\t1. Description\n\t2. Amount\n")
 	var choice int
-	_, _ = fmt.Scanf("%d", &choice)
+	_, err = fmt.Scanf("%d", &choice)
+	if err != nil {
+		return NaNError
+	}
 	switch choice {
 	case 1:
 		fmt.Printf("\nEnter the new description of the expense: ")

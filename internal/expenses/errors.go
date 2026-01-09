@@ -10,4 +10,5 @@ var (
 	indexOutOfRangeError  = errors.New("index out of range")
 	greaterThanZeroError  = errors.New("amount must be greater than zero")
 	defaultError          = errors.New("invalid choice")
+	NaNError              = errors.New("not a number")
 )
