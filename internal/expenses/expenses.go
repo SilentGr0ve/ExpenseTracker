@@ -6,9 +6,9 @@ import (
 )
 
 type Expense struct {
-	Description string
-	Amount      float64
-	Date        time.Time
+	Description string    `json:"description"`
+	Amount      float64   `json:"amount"`
+	Date        time.Time `json:"date"`
 }
 
 type ExpenseList []Expense
