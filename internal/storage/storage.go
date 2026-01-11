@@ -5,9 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 func SaveExpenses(path string, el expenses.ExpenseList) error {
+	dir := filepath.Dir(path)
+	if err := os.Mkdir(dir, 0755); err != nil {
+		return err
+	}
+
 	jsonData, err := json.MarshalIndent(el, "", "  ")
 	if err != nil {
 		return err
