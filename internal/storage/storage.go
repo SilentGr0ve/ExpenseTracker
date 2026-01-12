@@ -3,15 +3,16 @@ package storage
 import (
 	"ExpenseTracker/internal/expenses"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 )
 
 func SaveExpenses(path string, el expenses.ExpenseList) error {
-	dir := filepath.Dir(path)
-	if err := os.Mkdir(dir, 0755); err != nil {
-		return err
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		dir := filepath.Dir(path)
+		if err := os.Mkdir(dir, 0755); err != nil {
+			return err
+		}
 	}
 
 	jsonData, err := json.MarshalIndent(el, "", "  ")
@@ -37,7 +38,7 @@ func LoadExpenses(path string) (expenses.ExpenseList, error) {
 	}
 
 	if len(jsonData) == 0 {
-		return expenses.ExpenseList{}, fmt.Errorf("expenses file is empty")
+		return expenses.ExpenseList{}, emptyFileError
 	}
 
 	expensesList := expenses.ExpenseList{}

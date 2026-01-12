@@ -10,12 +10,12 @@ import (
 
 func PrintHelp() {
 	fmt.Println("Commands:")
-	fmt.Printf("\t1. help \n")
-	fmt.Printf("\t2. add {\n")
-	fmt.Printf("\t3. update \n")
-	fmt.Printf("\t4. delete \n")
-	fmt.Printf("\t5. list \n")
-	fmt.Printf("\t6. summary \n")
+	fmt.Print("\t1. 📚 help\n\n")
+	fmt.Print("\t2. ✅ add -description {} -amount {};\n\t\tAdding an item with the name 'description' and price 'amount' to the list\n\n")
+	fmt.Print("\t3. 🔁 update -index {} -field={} -description/-amount {}\n\t\tUpdating the value of the item in the field 'field' under the number 'index'\n\n")
+	fmt.Print("\t4. ❌ delete -index {}\n\t\tRemoving item number {}\n\n")
+	fmt.Print("\t5. 📋 list\n\t\tDisplay all expenses\n\n")
+	fmt.Print("\t6. 💵 summary\n\t\tTotal expenses\n\n")
 }
 
 func PrintAdded(expense expenses.Expense) {

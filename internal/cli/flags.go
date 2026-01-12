@@ -20,10 +20,10 @@ func ParseAddFlags(args []string) (*AddFlags, error) {
 	}
 
 	if *desc == "" {
-		return nil, errors.New("description cannot be empty")
+		return nil, emptyDescriptionError
 	}
 	if *amount <= 0 {
-		return nil, errors.New("amount must be greater than zero")
+		return nil, emptyAmountError
 	}
 
 	return &AddFlags{
@@ -45,7 +45,7 @@ func ParseRemoveFlags(args []string, length int) (*RemoveFlags, error) {
 	}
 
 	if *index <= 0 || *index > length {
-		return nil, errors.New("index out of range")
+		return nil, indexOutOfRangeError
 	}
 
 	return &RemoveFlags{
@@ -72,16 +72,16 @@ func ParseUpdateFlags(args []string, length int) (*UpdateFlags, error) {
 	}
 
 	if *index <= 0 || *index > length {
-		return nil, errors.New("index out of range")
+		return nil, indexOutOfRangeError
 	}
 
 	if *field != "description" && *field != "amount" {
-		return nil, errors.New("field must be 'description' or 'amount'")
+		return nil, fieldValueError
 	}
 
 	if *field == "description" {
 		if *description == "" {
-			return nil, errors.New("description cannot be empty")
+			return nil, emptyDescriptionError
 		}
 	} else if *field == "amount" {
 		if *amount <= 0 {
